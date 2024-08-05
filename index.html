@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cash Flow Calculator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="container">
         <h1>Cash Flow Calculator</h1>
-        <div class="calculator">
+
+        <!-- Address and Property Details -->
+        <div class="input-section">
+            <h2>Property Details</h2>
             <div class="input-group">
                 <label for="address">Address:</label>
                 <input type="text" id="address" placeholder="123 Main St">
@@ -38,7 +39,7 @@
             </div>
             <div class="input-group">
                 <label for="pricePerSqFt">Price Per Square Foot:</label>
-                <input type="number" id="pricePerSqFt" placeholder="200">
+                <input type="number" id="pricePerSqFt" placeholder="200" readonly>
             </div>
             <div class="input-group">
                 <label for="askingPrice">Asking Price:</label>
@@ -56,39 +57,171 @@
                 <label for="closingCost">Purchase Closing Cost:</label>
                 <input type="number" id="closingCost" placeholder="10000">
             </div>
+        </div>
+
+        <!-- Income and Rent Details -->
+        <div class="input-section">
+            <h2>Income and Rent Details</h2>
+            <button onclick="fetchFMR()">Fetch Section 8 Rent</button>
             <div class="input-group">
-                <label for="downPayment">Down Payment Percentage:</label>
-                <input type="number" id="downPayment" placeholder="3.5">
+                <label for="section8Rent">Section 8 Rent per Unit:</label>
+                <input type="number" id="section8Rent" readonly>
+            </div>
+            <div class="input-group">
+                <label for="numUnits">Number of Units:</label>
+                <input type="number" id="numUnits" placeholder="4">
+            </div>
+        </div>
+
+        <!-- Fixed Expenses -->
+        <div class="input-section">
+            <h2>Fixed Expenses</h2>
+            <div class="input-group">
+                <label for="pmi">PMI:</label>
+                <input type="number" id="pmi" placeholder="100">
+            </div>
+            <div class="input-group">
+                <label for="propertyTaxes">Property Taxes:</label>
+                <input type="number" id="propertyTaxes" placeholder="300">
+            </div>
+            <div class="input-group">
+                <label for="electricity">Electricity:</label>
+                <input type="number" id="electricity" placeholder="50">
+            </div>
+            <div class="input-group">
+                <label for="waterSewer">Water & Sewer:</label>
+                <input type="number" id="waterSewer" placeholder="40">
+            </div>
+            <div class="input-group">
+                <label for="hoa">HOA:</label>
+                <input type="number" id="hoa" placeholder="30">
+            </div>
+            <div class="input-group">
+                <label for="insurance">Insurance:</label>
+                <input type="number" id="insurance" placeholder="200">
+            </div>
+            <div class="input-group">
+                <label for="otherExpenses">Other Expenses:</label>
+                <input type="number" id="otherExpenses" placeholder="60">
+            </div>
+        </div>
+
+        <!-- Variable Landlord Paid Expenses -->
+        <div class="input-section">
+            <h2>Variable Landlord Paid Expenses</h2>
+            <div class="input-group">
+                <label for="vacancy">Vacancy (%):</label>
+                <input type="number" id="vacancy" placeholder="5">
+            </div>
+            <div class="input-group">
+                <label for="repairsMaintenance">Repairs & Maintenance (%):</label>
+                <input type="number" id="repairsMaintenance" placeholder="10">
+            </div>
+            <div class="input-group">
+                <label for="capEx">Capital Expenditures (%):</label>
+                <input type="number" id="capEx" placeholder="5">
+            </div>
+            <div class="input-group">
+                <label for="managementFees">Management Fees (%):</label>
+                <input type="number" id="managementFees" placeholder="8">
+            </div>
+        </div>
+
+        <!-- Loan Qualification -->
+        <div class="input-section">
+            <h2>Loan Qualification</h2>
+            <div class="input-group">
+                <label for="w2GrossAnnualIncome">W-2 Gross Annual Income:</label>
+                <input type="number" id="w2GrossAnnualIncome" placeholder="60000">
+            </div>
+            <div class="input-group">
+                <label for="monthlyRentalIncome">Monthly Rental Income:</label>
+                <input type="number" id="monthlyRentalIncome" readonly>
+            </div>
+            <div class="input-group">
+                <label for="monthlyDebt">Monthly Debt:</label>
+                <input type="number" id="monthlyDebt" placeholder="500">
+            </div>
+        </div>
+
+        <!-- Loan Details -->
+        <div class="input-section">
+            <h2>Loan Details</h2>
+            <div class="input-group">
+                <label for="cashPurchase">Cash Purchase:</label>
+                <select id="cashPurchase">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="downPaymentPercentage">Down Payment Percentage:</label>
+                <input type="number" id="downPaymentPercentage" placeholder="3.5">
+            </div>
+            <div class="input-group">
+                <label for="financeUpfrontMip">Finance Upfront MIP:</label>
+                <select id="financeUpfrontMip">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="loanAmount">Loan Amount:</label>
+                <input type="number" id="loanAmount" readonly>
             </div>
             <div class="input-group">
                 <label for="interestRate">Loan Interest Rate (%):</label>
                 <input type="number" id="interestRate" step="0.01" placeholder="4.0">
             </div>
             <div class="input-group">
-                <label for="loanTerm">Loan Term (years):</label>
+                <label for="interestOnly">Interest Only:</label>
+                <select id="interestOnly">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="loanTerm">Amortized Over (years):</label>
                 <input type="number" id="loanTerm" placeholder="30">
             </div>
-            <div class="input-group">
-                <label for="numUnits">Number of Units:</label>
-                <input type="number" id="numUnits" placeholder="4">
+        </div>
+
+        <!-- Results -->
+        <div class="results-section">
+            <h2>Results</h2>
+            <div class="result-group">
+                <label>Monthly Cash Flow (Overall):</label>
+                <span id="monthlyCashFlowOverall">$0</span>
             </div>
-            <div class="input-group">
-                <label for="section8Rent">Section 8 Rent per Unit:</label>
-                <input type="number" id="section8Rent" placeholder="1200">
+            <div class="result-group">
+                <label>Monthly Cash Flow (Per Person):</label>
+                <span id="monthlyCashFlowPerPerson">$0</span>
             </div>
-            <button onclick="calculateCashFlow()">Calculate</button>
-            <div class="results">
-                <h2>Results</h2>
-                <p>Monthly Rental Income: <span id="monthlyIncome">$0</span></p>
-                <p>Yearly Rental Income: <span id="yearlyIncome">$0</span></p>
-                <p>Monthly Mortgage Payment: <span id="monthlyMortgage">$0</span></p>
-                <p>Total Monthly Expenses: <span id="totalMonthlyExpenses">$0</span></p>
-                <p>Net Monthly Cash Flow: <span id="netMonthlyCashFlow">$0</span></p>
-                <p>Net Yearly Cash Flow: <span id="netYearlyCashFlow">$0</span></p>
+            <div class="result-group">
+                <label>Cash on Cash Return (%):</label>
+                <span id="cashOnCashReturn">0%</span>
+            </div>
+            <div class="result-group">
+                <label>Discount Rate (%):</label>
+                <span id="discountRate">0%</span>
+            </div>
+            <div class="result-group">
+                <label>Debt to Income Ratio (%):</label>
+                <span id="debtToIncome">0%</span>
+            </div>
+            <div class="result-group">
+                <label>1% Rule:</label>
+                <span id="onePercentRule">$0</span>
+            </div>
+            <div class="result-group">
+                <label>House Hacking Savings:</label>
+                <span id="houseHackingSavings">$0</span>
             </div>
         </div>
+
+        <button onclick="calculate()">Calculate</button>
     </div>
+
     <script src="script.js"></script>
 </body>
-
 </html>
