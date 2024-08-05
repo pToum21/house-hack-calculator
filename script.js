@@ -1,5 +1,6 @@
 // script.js
 
+// Function to fetch Fair Market Rent (FMR) and rental prices
 async function fetchFMR() {
     const city = document.getElementById('city').value;
     const state = document.getElementById('state').value;
@@ -7,21 +8,28 @@ async function fetchFMR() {
 
     // Fetch Section 8 Rent from HUD API
     const hudUrl = `https://api.hud.gov/section8/fmr/${state}/${city}/${zip}`;
-    const hudResponse = await fetch(hudUrl);
-    const hudData = await hudResponse.json();
+    try {
+        const hudResponse = await fetch(hudUrl);
+        const hudData = await hudResponse.json();
+        const section8Rent = hudData.rent;
+        document.getElementById('section8Rent').value = section8Rent;
+    } catch (error) {
+        console.error('Error fetching Section 8 Rent data:', error);
+    }
 
-    const section8Rent = hudData.rent;
-    document.getElementById('section8Rent').value = section8Rent;
-
-    // Fetch Property Details from Zillow API
-    const zillowUrl = `https://api.zillow.com/v1/GetDeepSearchResults?address=${encodeURIComponent(city)}&citystatezip=${state}&zws-id=YOUR_ZILLOW_API_KEY`;
-    const zillowResponse = await fetch(zillowUrl);
-    const zillowData = await zillowResponse.json();
-
-    const pricePerSqFt = zillowData.results[0].pricePerSquareFoot;
-    document.getElementById('pricePerSqFt').value = pricePerSqFt;
+    // Fetch Rental Price from RentCast API
+    const rentCastUrl = `https://api.rentcast.io/v1/rent/${state}/${city}/${zip}?api_key=YOUR_RENTCAST_API_KEY`;
+    try {
+        const rentCastResponse = await fetch(rentCastUrl);
+        const rentCastData = await rentCastResponse.json();
+        const pricePerSqFt = rentCastData.price_per_sqft;
+        document.getElementById('pricePerSqFt').value = pricePerSqFt;
+    } catch (error) {
+        console.error('Error fetching RentCast data:', error);
+    }
 }
 
+// Function to calculate cash flow
 function calculate() {
     const numUnits = parseFloat(document.getElementById('numUnits').value);
     const section8Rent = parseFloat(document.getElementById('section8Rent').value);
