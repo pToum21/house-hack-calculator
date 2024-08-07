@@ -26,7 +26,7 @@ async function fetchFMR() {
     }
 
     // Fetch Rental Price from RentCast API
-    const rentCastUrl = `https://api.rentcast.io/v1/rent/${state}/${city}/${zip}?api_key=`;
+    const rentCastUrl = `https://api.rentcast.io/v1/rent/${state}/${city}/${zip}?api_key=4b9f826aef0b48ef81a0f96468a50502`;
     try {
         const rentCastResponse = await fetch(rentCastUrl);
         if (!rentCastResponse.ok) {
